@@ -94,50 +94,5 @@ def test_logurud_multiple_messages():
 def test_debug_visible():
     assert True
 
-# Тесты для bool
-
-def to_bool(x):
-    if isinstance(x, str):
-        return x.lower() in ("true", "1", "yes")
-    return bool(x)
-
-def to_float(x, default=0.0):
-    try:
-        return float(x)
-    except (ValueError, TypeError):
-        return default
 
 
-@pytest.mark.parametrize("value,expected", [
-    ("true", True),
-    ("True", True),
-    ("false", False),
-    ("False", False),
-    ("yes", True),
-    ("no", False),
-    ("1", True),
-    ("0", False),
-    (1, True),
-    (0, False),
-    ("", False),
-    (None, False),
-])
-def test_to_bool_cases(value, expected):
-    assert to_bool(value) == expected
-
-@pytest.mark.parametrize("value,expected", [
-    ("3.14", 3.14),
-    ("0", 0.0),
-    (42, 42.0),
-    ("-7.5", -7.5),
-])
-def test_to_float_valid(value, expected):
-    assert to_float(value) == expected
-
-@pytest.mark.parametrize("value,default", [
-    ("abc", 1.1),
-    ("", 2.2),
-    (None, 3.3),
-])
-def test_to_float_invalid_with_default(value, default):
-    assert to_float(value, default=default) == default
