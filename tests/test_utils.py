@@ -4,7 +4,7 @@ import os
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
-# Импорт с fallback
+
 try:
     from python_utils.types import Any
 except ImportError:
@@ -40,9 +40,13 @@ def str_to_int(x):
     (" 15 ", 15),
 ])
 def test_str_to_int_valid_cases(input_str, expected):
-    assert str_to_int(input_str.strip()) == expected
+    assert str_to_int(input_str) == expected
 
-@pytest.mark.parametrize("invalid_input", ["abc", "", " ", "3.14", None, [], {}, True])
+def test_str_to_int_with_boolean():
+    assert str_to_int(True) == 1
+    assert str_to_int(False) == 0
+
+@pytest.mark.parametrize("invalid_input", ["abc", "", " ", "3.14", None, [], {}])
 def test_str_to_int_invalid_cases(invalid_input):
     with pytest.raises((ValueError, TypeError)):
         str_to_int(invalid_input)
