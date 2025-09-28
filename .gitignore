@@ -1,7 +1,0 @@
-/build
-/dist
-/*.egg-info
-/docs/_build
-/cover
-/.eggs
-/.*
