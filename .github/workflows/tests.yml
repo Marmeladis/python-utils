@@ -13,9 +13,6 @@ jobs:
       matrix:
         python-version: [3.11]
 
-    env:
-      PYTHONPATH: ${{ github.workspace }}
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -28,12 +25,10 @@ jobs:
       - name: Install dependencies
         run: |
           python -m venv venv
-          source venv/bin/activate
-          pip install --upgrade pip
-          pip install -e .           # установим пакет в editable-режиме
-          pip install pytest pytest-asyncio pytest-cov loguru
+          ./venv/bin/pip install --upgrade pip
+          ./venv/bin/pip install -e .
+          ./venv/bin/pip install pytest pytest-asyncio pytest-cov loguru
 
       - name: Run tests with coverage
         run: |
-          source venv/bin/activate
-          python -m pytest --cov=python_utils tests/ --cov-report=term-missing --cov-fail-under=100
+          ./venv/bin/python -m pytest --cov=python_utils tests/ --cov-report=term-missing --cov-fail-under=100
