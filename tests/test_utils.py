@@ -9,6 +9,9 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')
 from python_utils.types import Any  
 from python_utils.loguru import Logurud  
 
+print("Файл test_utils.py загружен")
+
+
 def async_wrap(func):
     async def wrapper(*args, **kwargs):
         return await func(*args, **kwargs)
