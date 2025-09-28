@@ -9,6 +9,7 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
+
     strategy:
       matrix:
         python-version: [3.11]
@@ -25,10 +26,14 @@ jobs:
       - name: Install dependencies
         run: |
           python -m venv venv
-          ./venv/bin/pip install --upgrade pip
-          ./venv/bin/pip install -e .
-          ./venv/bin/pip install pytest pytest-asyncio pytest-cov loguru
+          source venv/bin/activate
+          pip install --upgrade pip
+          pip install -e .
+          pip install pytest pytest-asyncio pytest-cov loguru
 
       - name: Run tests with coverage
         run: |
-          ./venv/bin/python -m pytest --cov=python_utils tests/ --cov-report=term-missing --cov-fail-under=100
+          source venv/bin/activate
+          pytest --cov=python_utils tests/ \
+                 --cov-report=term-missing \
+                 --cov-fail-under=100
