@@ -30,10 +30,10 @@ jobs:
           python -m venv venv
           source venv/bin/activate
           pip install --upgrade pip
-          pip install -e .            # установим пакет в editable-режиме
+          pip install -e .           # установим пакет в editable-режиме
           pip install pytest pytest-asyncio pytest-cov loguru
 
       - name: Run tests with coverage
         run: |
           source venv/bin/activate
-          pytest --cov=python_utils tests/ --cov-report=term-missing --cov-fail-under=100
+          python -m pytest --cov=python_utils tests/ --cov-report=term-missing --cov-fail-under=100
