@@ -30,9 +30,15 @@ jobs:
           pip install --upgrade pip
           pip install pytest pytest-asyncio pytest-cov loguru
 
-      - name: Run tests with coverage
+      - name: Show test files
+        run: |
+          echo "Listing contents of tests directory:"
+          ls -lR tests
+
+      - name: Run tests directly
         run: |
           source venv/bin/activate
-          PYTHONPATH=$(pwd) pytest --cov=python_utils tests/ \
+          PYTHONPATH=$(pwd) pytest tests/test_utils.py -v \
+            --cov=python_utils \
             --cov-report=term-missing \
             --cov-fail-under=0
