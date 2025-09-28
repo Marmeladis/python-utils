@@ -98,6 +98,18 @@ def test_debug_visible():
 
 # Тесты для bool
 
+def to_bool(x):
+    if isinstance(x, str):
+        return x.lower() in ("true", "1", "yes")
+    return bool(x)
+
+def to_float(x, default=0.0):
+    try:
+        return float(x)
+    except (ValueError, TypeError):
+        return default
+
+
 @pytest.mark.parametrize("value,expected", [
     ("true", True),
     ("True", True),
