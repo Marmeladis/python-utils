@@ -1,28 +1,31 @@
-name: Run Python Utils Tests
+name: Python Tests
 
-on: [push, pull_request]
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
 
 jobs:
   test:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
+    - uses: actions/checkout@v3
 
-      - name: Set up Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: "3.10"
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
 
-      - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install -r requirements.txt
-          pip install pytest pytest-asyncio coverage
+    - name: Install dependencies
+      run: |
+        python -m venv venv
+        source venv/bin/activate
+        python -m pip install --upgrade pip
+        pip install pytest pytest-asyncio pytest-cov
 
-      - name: Run tests with coverage
-        run: |
-          coverage run -m pytest
-          coverage report
-          coverage html
+    - name: Run tests with coverage
+      run: |
+        source venv/bin/activate
+        pytest --cov=python_utils tests/ --cov-report=term-missing
