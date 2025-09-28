@@ -33,7 +33,6 @@ jobs:
       - name: Run tests with coverage
         run: |
           source venv/bin/activate
-          # Добавляем корень проекта в PYTHONPATH, чтобы импорты работали
           PYTHONPATH=$(pwd) pytest --cov=python_utils tests/ \
             --cov-report=term-missing \
             --cov-fail-under=0
