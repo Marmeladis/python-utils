@@ -2,6 +2,9 @@
 import pytest
 import asyncio
 
+import sys
+import os
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 
 from python_utils.types import Any  
