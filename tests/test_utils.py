@@ -4,6 +4,8 @@ import os
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
+from python_utils.converters import to_bool, to_float
+
 
 try:
     from python_utils.types import Any
@@ -93,3 +95,39 @@ def test_logurud_multiple_messages():
 
 def test_debug_visible():
     assert True
+
+# Тесты для bool
+
+@pytest.mark.parametrize("value,expected", [
+    ("true", True),
+    ("True", True),
+    ("false", False),
+    ("False", False),
+    ("yes", True),
+    ("no", False),
+    ("1", True),
+    ("0", False),
+    (1, True),
+    (0, False),
+    ("", False),
+    (None, False),
+])
+def test_to_bool_cases(value, expected):
+    assert to_bool(value) == expected
+
+@pytest.mark.parametrize("value,expected", [
+    ("3.14", 3.14),
+    ("0", 0.0),
+    (42, 42.0),
+    ("-7.5", -7.5),
+])
+def test_to_float_valid(value, expected):
+    assert to_float(value) == expected
+
+@pytest.mark.parametrize("value,default", [
+    ("abc", 1.1),
+    ("", 2.2),
+    (None, 3.3),
+])
+def test_to_float_invalid_with_default(value, default):
+    assert to_float(value, default=default) == default
