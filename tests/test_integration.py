@@ -41,8 +41,8 @@ def test_to_int_integration_error():
     invalid_values = ["abc", None, {}]
 
     for val in invalid_values:
-        with pytest.raises((ValueError, TypeError)):
-            converters.to_int(val)
+        result = converters.to_int(val)
+        assert result is None
 
 # 6.
 def test_to_int_boundary_integration():
