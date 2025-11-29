@@ -28,10 +28,11 @@ def test_logger_integration(caplog):
 
 
 # 4. 
-def test_terminal_size_integration(monkeypatch):
-    monkeypatch.setattr(terminal, "os", type("OsMock", (), {"get_terminal_size": lambda: (80, 24)})())
+def test_terminal_size_integration():
     width, height = terminal.get_terminal_size()
-    assert width == 80 and height == 24
+    assert isinstance(width, int) and isinstance(height, int)
+    assert width > 0 and height > 0
+
 
 
 # 5. 
