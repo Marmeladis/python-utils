@@ -22,7 +22,8 @@ def test_listify_decorator_integration():
 # 3. 
 def test_logger_integration(caplog):
     log = logger.Logged()
-    log.logger.info("Test message")
+    with caplog.at_level("INFO", logger=log.logger.name):
+        log.logger.info("Test message")
     assert "Test message" in caplog.text
 
 
