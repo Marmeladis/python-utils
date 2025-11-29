@@ -12,7 +12,7 @@ def test_any_and_str_to_int_integration():
     values = ["10", True, False, " 42 "]
     expected = [10, 1, 0, 42]
 
-    result = [str_to_int(Any(v)) for v in values]
+    result = [to_int(Any(v)) for v in values]
 
     assert result == expected
 
@@ -61,7 +61,7 @@ def test_invalid_data_error_flow():
     logger = Logurud("invalid")
 
     try:
-        str_to_int("abc")
+        to_int("abc")
     except Exception as e:
         logger.error(str(e))
 
@@ -71,7 +71,7 @@ def test_invalid_data_error_flow():
 
 
 # 6 
-@pytest.mark.xfail(reason="str_to_int не умеет конвертировать float-строки")
+@pytest.mark.xfail(reason="to_int не умеет конвертировать float-строки")
 def test_str_to_int_float_string_xfail():
-    result = str_to_int("3.14")
+    result = to_int("3.14")
     assert result == 3
