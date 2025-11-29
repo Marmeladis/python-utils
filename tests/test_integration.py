@@ -1,101 +1,52 @@
 import pytest
-import sys
-import os
-
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+from python_utils import converters, formatters, decorators, logger, terminal, import_
 
 
-try:
-    from python_utils.types import Any
-except ImportError:
-    Any = object
-
-try:
-    from python_utils.loguru import Logurud
-except ImportError:
-    class Logurud:
-        def __init__(self, name):
-            self.name = name
-            self.logged = []
-        def info(self, msg):
-            self.logged.append(msg)
-        def warning(self, msg):
-            self.logged.append(f"WARNING: {msg}")
-        def error(self, msg):
-            self.logged.append(f"ERROR: {msg}")
-        def get_logs(self):
-            return self.logged
-
-
-def str_to_int(x):
-    return int(x)
-
-
-# 1
-def test_any_and_str_to_int_integration():
-    values = ["10", True, False, " 42 "]
-    expected = [10, 1, 0, 42]
-
-    result = [str_to_int(Any(v)) for v in values]
-
+# 1. 
+def test_to_int_integration():
+    values = ["42", 0, 3.14, "100"]
+    expected = [42, 0, 3, 100]
+    result = [converters.to_int(v) for v in values]
     assert result == expected
 
 
-# 2
-def test_logurud_accepts_any_type():
-    logger = Logurud("types_test")
-
-    data = [123, "hello", {"a": 1}]
-    for d in data:
-        logger.info(d)
-
-    logs = logger.get_logs()
-
-    assert "123" in logs[0]
-    assert "hello" in logs[1]
-    assert "{'a': 1}" in logs[2]
+# 2. 
+def test_camel_to_underscore_integration():
+    class TestObj:
+        camelCaseAttr = 1
+    obj = TestObj()
+    formatters.apply_recursive(obj, formatters.camel_to_underscore)
+    assert hasattr(obj, "camel_case_attr")
+    assert obj.camel_case_attr == 1
 
 
-# 3
-def test_warning_and_error_flow():
-    logger = Logurud("flow")
-
-    logger.warning("low disk")
-    logger.error("disk failed")
-
-    logs = logger.get_logs()
-
-    assert logs[0].startswith("WARNING:")
-    assert logs[1].startswith("ERROR:")
+# 3. 
+def test_listify_decorator_integration():
+    @decorators.listify()
+    def gen_numbers():
+        for i in range(3):
+            yield i
+    result = gen_numbers()
+    assert result == [0, 1, 2]
 
 
-# 4
-def test_multiple_operations_integration():
-    logger = Logurud("multi")
-
-    msgs = ["a", "b", "c"]
-    for m in msgs:
-        logger.info(m)
-
-    assert logger.get_logs() == msgs
+# 4. 
+def test_logger_integration(caplog):
+    log = logger.Logged()
+    log.logger.info("Test message")
+    assert "Test message" in caplog.text
 
 
-# 5 
-def test_invalid_data_error_flow():
-    logger = Logurud("invalid")
-
-    try:
-        str_to_int("abc")
-    except Exception as e:
-        logger.error(str(e))
-
-    logs = logger.get_logs()
-
-    assert any("invalid literal" in log for log in logs)
+# 5. 
+def test_terminal_size_integration(monkeypatch):
+    monkeypatch.setattr(terminal, "os", type("OsMock", (), {"get_terminal_size": lambda: (80, 24)})())
+    width, height = terminal.get_terminal_size()
+    assert width == 80 and height == 24
 
 
-# 6 
-@pytest.mark.xfail(reason="str_to_int не умеет конвертировать float-строки")
-def test_str_to_int_float_string_xfail():
-    result = str_to_int("3.14")
-    assert result == 3
+# 6. 
+def test_import_global_integration():
+    mod = import_.import_global("math")
+    assert hasattr(mod, "sqrt")
+    with pytest.raises(import_.DummyError):
+        import_.import_global("non_existing_mo
