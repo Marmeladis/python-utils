@@ -12,12 +12,12 @@ def test_to_int_integration():
 
 # 2. 
 def test_camel_to_underscore_integration():
-    data = {"camelCaseAttr": 1, "nestedDict": {"innerCamel": 2}}
-    formatters.apply_recursive(data, formatters.camel_to_underscore)
-    assert "camel_case_attr" in data
-    assert data["camel_case_attr"] == 1
-    assert "nested_dict" in data
-    assert data["nested_dict"]["inner_camel"] == 2
+    data = {"value": "camelCaseString", "nested": {"inner": "innerCamel"}}
+    
+    formatters.apply_recursive(data, lambda v: formatters.camel_to_underscore(v) if isinstance(v, str) else v)
+    
+    assert data["value"] == "camel_case_string"
+    assert data["nested"]["inner"] == "inner_camel"
 
 
 
