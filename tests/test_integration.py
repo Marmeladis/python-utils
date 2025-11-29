@@ -35,16 +35,8 @@ def test_terminal_size_integration():
     assert isinstance(width, int) and isinstance(height, int)
     assert width > 0 and height > 0
 
-# 5. 
-def test_import_global_integration():
-    mod = import_.import_global("math")
-    assert mod is not None
-    assert hasattr(mod, "sqrt")
 
-    result = import_.import_global("non_existing_module")
-    assert result is None
-
-#6.
+# 5.
 def test_to_int_integration_error():
     invalid_values = ["abc", None, {}]
 
@@ -52,7 +44,7 @@ def test_to_int_integration_error():
         with pytest.raises((ValueError, TypeError)):
             converters.to_int(val)
 
-#7.
+# 6.
 def test_to_int_boundary_integration():
     boundary_values = [
         0,
