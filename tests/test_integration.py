@@ -49,4 +49,5 @@ def test_import_global_integration():
     mod = import_.import_global("math")
     assert hasattr(mod, "sqrt")
     with pytest.raises(import_.DummyError):
-        import_.import_global("non_existing_mo
+        import_.import_global("non_existing_module")
+
