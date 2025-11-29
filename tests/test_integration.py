@@ -1,5 +1,10 @@
 import pytest
-from your_module import str_to_int, Any, Logurud
+
+
+from python_utils.types import Any
+from python_utils.converters import to_int
+from python_utils.logger import Logged
+from python_utils.loguru import Logurud
 
 
 # 1
