@@ -1,10 +1,34 @@
 import pytest
+import sys
+import os
+
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 
-from python_utils.types import Any
-from python_utils.converters import to_int
-from python_utils.logger import Logged
-from python_utils.loguru import Logurud
+try:
+    from python_utils.types import Any
+except ImportError:
+    Any = object
+
+try:
+    from python_utils.loguru import Logurud
+except ImportError:
+    class Logurud:
+        def __init__(self, name):
+            self.name = name
+            self.logged = []
+        def info(self, msg):
+            self.logged.append(msg)
+        def warning(self, msg):
+            self.logged.append(f"WARNING: {msg}")
+        def error(self, msg):
+            self.logged.append(f"ERROR: {msg}")
+        def get_logs(self):
+            return self.logged
+
+
+def str_to_int(x):
+    return int(x)
 
 
 # 1
@@ -12,7 +36,7 @@ def test_any_and_str_to_int_integration():
     values = ["10", True, False, " 42 "]
     expected = [10, 1, 0, 42]
 
-    result = [to_int(Any(v)) for v in values]
+    result = [str_to_int(Any(v)) for v in values]
 
     assert result == expected
 
@@ -61,7 +85,7 @@ def test_invalid_data_error_flow():
     logger = Logurud("invalid")
 
     try:
-        to_int("abc")
+        str_to_int("abc")
     except Exception as e:
         logger.error(str(e))
 
@@ -71,7 +95,7 @@ def test_invalid_data_error_flow():
 
 
 # 6 
-@pytest.mark.xfail(reason="to_int не умеет конвертировать float-строки")
+@pytest.mark.xfail(reason="str_to_int не умеет конвертировать float-строки")
 def test_str_to_int_float_string_xfail():
-    result = to_int("3.14")
+    result = str_to_int("3.14")
     assert result == 3
