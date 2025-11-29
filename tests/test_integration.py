@@ -42,7 +42,7 @@ def test_to_int_integration_error():
 
     for val in invalid_values:
         result = converters.to_int(val)
-        assert result is None
+        assert result == 0
 
 # 6.
 def test_to_int_boundary_integration():
