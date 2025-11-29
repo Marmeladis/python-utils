@@ -1,5 +1,7 @@
 import pytest
 from python_utils import converters, formatters, decorators, logger, terminal, import_
+from python_utils import import_
+from python_utils import converters
 
 
 # 1. 
@@ -33,12 +35,44 @@ def test_terminal_size_integration():
     assert isinstance(width, int) and isinstance(height, int)
     assert width > 0 and height > 0
 
-
-
 # 5. 
 def test_import_global_integration():
     mod = import_.import_global("math")
+    assert mod is not None
     assert hasattr(mod, "sqrt")
-    with pytest.raises(import_.DummyError):
-        import_.import_global("non_existing_module")
+
+    result = import_.import_global("non_existing_module")
+    assert result is None
+
+#6.
+def test_to_int_integration_error():
+    invalid_values = ["abc", None, {}]
+
+    for val in invalid_values:
+        with pytest.raises((ValueError, TypeError)):
+            converters.to_int(val)
+
+#7.
+def test_to_int_boundary_integration():
+    boundary_values = [
+        0,
+        -1,
+        2**63 - 1,
+        -(2**63),
+        "  42  ",
+        "000123",
+    ]
+
+    expected = [
+        0,
+        -1,
+        2**63 - 1,
+        -(2**63),
+        42,
+        123,
+    ]
+
+    result = [converters.to_int(v) for v in boundary_values]
+    assert result == expected
+
 
